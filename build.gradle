@@ -1,0 +1,50 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.7.10'
+    id 'application'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.jetbrains.kotlinx:dataframe:0.9.0-dev-1094'
+    implementation 'org.slf4j:slf4j-simple:2.0.0'
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = JavaVersion.VERSION_11
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = JavaVersion.VERSION_11
+}
+
+mainClassName = "org.logging.demo.MainKt"
+
+jar {
+    manifest {
+        attributes "Multi-Release": true
+        attributes "Main-Class": "$mainClassName"
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    } {
+        duplicatesStrategy = 'WARN'
+        exclude 'META-INF/*.txt', 'META-INF/*.md', 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/versions/*/module-info.class', 'META-INF/LICENSE', 'META-INF/NOTICE'
+    }
+}
